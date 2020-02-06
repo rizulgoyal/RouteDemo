@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onLocationResult(LocationResult locationResult) {
                 for (Location location : locationResult.getLocations())
                 {
+                    mMap.
                     LatLng userLocation = new LatLng( location.getLatitude(), location.getLongitude());
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
