@@ -1,5 +1,10 @@
 package com.example.routedemo;
 
+import android.graphics.Color;
+
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.PolyUtil;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -111,6 +116,53 @@ public List<HashMap<String , String>> parse(String jsondata)
         return directionMap;
 
 
+    }
+
+    public String[] parseDirections(String jsonData) {
+
+        JSONArray jsonArray = null;
+        try {
+            JSONObject jsonObject = new JSONObject( jsonData );
+            jsonArray = jsonObject.getJSONArray( "routes" ).getJSONObject( 0 ).getJSONArray( "legs" ).getJSONObject( 0 ).getJSONArray( "steps" );
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return getDirections( jsonArray );    }
+
+
+
+
+    private String[] getDirections(JSONArray jsonArray) {
+
+        int count = jsonArray.length();
+
+
+        String[] directions = new String[count];
+
+        for(int i = 0;i<count;i++)
+        {
+            try {
+                directions[i] = getPath(jsonArray.getJSONObject( i ));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return directions;
+
+    }
+
+    private String getPath(JSONObject jsonObject) {
+
+        String polyline = "";
+        try {
+            polyline = jsonObject.getJSONObject( "polyline").getString( "points" );
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return polyline;
     }
 }
 

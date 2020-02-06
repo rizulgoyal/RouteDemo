@@ -1,11 +1,14 @@
 package com.example.routedemo;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.PolyUtil;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -63,5 +66,28 @@ public class GetDirectionData extends AsyncTask<Object, String, String> {
         googleMap.addMarker( new MarkerOptions().position( latLngUser )
                 .title( "Your Location" ));
 
+
+
+        if(MainActivity.directionRequest)
+        {
+            String[] directionsList;
+            DataParser parserDirection = new DataParser();
+            directionsList = parserDirection.parseDirections(s);
+            displayDirections(directionsList);
+        }
+
+    }
+
+    private void displayDirections(String[] directionsList) {
+        int count = directionsList.length;
+        for(int i = 0;i<count;i++)
+        {
+            PolylineOptions optionsline = new PolylineOptions()
+                    .addAll( PolyUtil.decode( directionsList[i] ) )
+                    .color( Color.WHITE)
+                    .width(10);
+            googleMap.addPolyline(optionsline);
+
+        }
     }
 }

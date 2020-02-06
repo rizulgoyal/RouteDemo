@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     double latitude, longitude;
     double destLat, destLong;
     final int RADIUS = 1500;
+    static boolean directionRequest;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -217,9 +219,10 @@ private String getUrl(double latitude, double longitude, String nearbyPlace)
                 Toast.makeText( this, "Restautants", Toast.LENGTH_SHORT ).show();
                 break;
             case R.id.btn_distance:
+            case R.id.btn_direction:
+
                 String direction_url = getDirectionUrl( latitude, longitude, destLat, destLong );
                 Log.i("MainActivity", direction_url);
-
                 dataTransfer = new Object[4];
                 dataTransfer[0] = mMap;
                 dataTransfer[1] = direction_url;
@@ -229,9 +232,17 @@ private String getUrl(double latitude, double longitude, String nearbyPlace)
                 GetDirectionData getDirectionData = new GetDirectionData();
                 getDirectionData.execute( dataTransfer );
                 Toast.makeText( this, "Distance", Toast.LENGTH_SHORT ).show();
-
+    if(view.getId() == R.id.btn_direction)
+    {
+        directionRequest = true;
+    }
+    else
+    {
+        directionRequest = false;
+    }
 
                 break;
+
         }
     }
 
