@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     LocationRequest locationRequest;
 
     double latitude, longitude;
+    double destLat, destLong;
     final int RADIUS = 1500;
 
     @Override
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onLocationResult(LocationResult locationResult) {
                 for (Location location : locationResult.getLocations())
                 {
-                    //new 
+                    //new
                     LatLng userLocation = new LatLng( location.getLatitude(), location.getLongitude());
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
@@ -126,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mMap.animateCamera( CameraUpdateFactory.newCameraPosition( cameraPosition ) );
                     mMap.addMarker( new MarkerOptions().position( userLocation )
                     .title( "Your Location" ));
+
 
 
 
@@ -153,70 +155,86 @@ private String getUrl(double latitude, double longitude, String nearbyPlace)
     placeUrl.append( "&key=" + getString(R.string.api_key_class ));
     return placeUrl.toString();
 }
+
+
+    private String getDirectionUrl(double latitude, double longitude, double destlatitude, double destlongitude)
+    {
+        StringBuilder placeUrl = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?"  );
+        placeUrl.append( "origin=" + latitude + "," + longitude );
+        placeUrl.append( "&destination=" + destlatitude + "," + destlongitude );
+
+        //placeUrl.append( "&keyword=cruise" );
+        placeUrl.append( "&key=" + getString(R.string.api_key_class ));
+        return placeUrl.toString();
+    }
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setMapType( GoogleMap.MAP_TYPE_HYBRID );
+        mMap.setOnMapLongClickListener( new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+
+
+
+//                CameraPosition cameraPosition = CameraPosition.builder()
+//                        .target( latLng )
+//                        .zoom( 15 )
+//                        .bearing( 0 )
+//                        .tilt( 45 )
+//                        .build();
+//                mMap.animateCamera( CameraUpdateFactory.newCameraPosition( cameraPosition ) );
+                destLat = latLng.latitude;
+                destLong = latLng.longitude;
+               mMap.addMarker( new MarkerOptions().position( latLng )
+                        .title( "Your Destination" )
+                       .draggable( true )
+                       .snippet( "you are going there" )
+                .icon( BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE )));
+
+
+            }
+        } );
 
     }
 
     public void btnClick(View view)
     {
+        Object[] dataTransfer;
+
         switch (view.getId())
         {
             case R.id.btn_restaurant:
                 // get the url from place api
                 String url = getUrl( latitude, longitude, "restaurant" );
-                Log.i("MainActivity", url);
+              //  Log.i("MainActivity", url);
                // setmarkers( url );
-                Object[] dataTransfer = new Object[2];
+                dataTransfer = new Object[2];
                 dataTransfer[0] = mMap;
                 dataTransfer[1] = url;
                 GetNearbyPlaceData getNearbyPlaceData = new GetNearbyPlaceData();
                 getNearbyPlaceData.execute(dataTransfer);
                 Toast.makeText( this, "Restautants", Toast.LENGTH_SHORT ).show();
                 break;
+            case R.id.btn_distance:
+                String direction_url = getDirectionUrl( latitude, longitude, destLat, destLong );
+                Log.i("MainActivity", direction_url);
+
+                dataTransfer = new Object[4];
+                dataTransfer[0] = mMap;
+                dataTransfer[1] = direction_url;
+
+                dataTransfer[2] = new LatLng( destLat, destLong );
+                dataTransfer[3] = new LatLng( latitude, longitude );
+                GetDirectionData getDirectionData = new GetDirectionData();
+                getDirectionData.execute( dataTransfer );
+                Toast.makeText( this, "Distance", Toast.LENGTH_SHORT ).show();
+
+
+                break;
         }
     }
 
-    private void setmarkers (String url) {
-        String placeData = "";
-
-        FetchURL fetchURL = new FetchURL();
-        try {
-
-            placeData = fetchURL.readUrl( url );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        List<HashMap<String, String>> nearByPlaceList = null;
-        DataParser parser = new DataParser();
-        nearByPlaceList = parser.parse( placeData );
-        for (int i = 0; i < nearByPlaceList.size(); i++) {
-            // Log.i("MainActivity", String.valueOf( nearbyList.size()));
-            HashMap<String, String> place = nearByPlaceList.get( i );
-
-            String placeName = place.get( "placeName" );
-            String vicinity = place.get( "vicinity" );
-            double lat = Double.parseDouble( place.get( "lat" ) );
-            double lng = Double.parseDouble( place.get( "lng" ) );
-            String reference = place.get( "reference" );
-
-            LatLng location = new LatLng( lat, lng );
-            MarkerOptions marker = new MarkerOptions().position( location )
-                    .title( placeName )
-
-                    .icon( BitmapDescriptorFactory.defaultMarker( BitmapDescriptorFactory.HUE_GREEN ) );
-            mMap.addMarker( marker );
-
-//            CameraPosition cameraPosition = CameraPosition.builder()
-//                    .target( location )
-//                    .zoom( 15 )
-//                    .bearing( 0 )
-//                    .tilt( 45 )
-//                    .build();
-//            mMap.animateCamera( CameraUpdateFactory.newCameraPosition( cameraPosition ) );
 
 
-        }
-    }
 }

@@ -75,5 +75,42 @@ public List<HashMap<String , String>> parse(String jsondata)
     return getPlaces( jsonArray );
 
 }
+
+    public HashMap<String, String> parseDistance(String jsondata) {
+
+        JSONArray jsonArray = null;
+        try {
+            JSONObject jsonObject = new JSONObject( jsondata );
+            jsonArray = jsonObject.getJSONArray( "routes" ).getJSONObject( 0 ).getJSONArray( "legs" );
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return getDuration( jsonArray );
+
+
+
+    }
+
+    private HashMap<String, String> getDuration(JSONArray jsonData)
+    {
+        HashMap<String, String> directionMap = new HashMap<>(  );
+
+        String duration = "";
+        String distance = "";
+        try {
+            distance = jsonData.getJSONObject( 0 ).getJSONObject( "distance" ).getString("text");
+
+            duration = jsonData.getJSONObject( 0 ).getJSONObject( "duration" ).getString("text");
+
+            directionMap.put( "duration", duration );
+            directionMap.put( "distance", distance );
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return directionMap;
+
+
+    }
 }
 
