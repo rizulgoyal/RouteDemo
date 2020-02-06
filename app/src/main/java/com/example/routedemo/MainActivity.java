@@ -164,7 +164,7 @@ private String getUrl(double latitude, double longitude, String nearbyPlace)
         {
             case R.id.btn_restaurant:
                 // get the url from place api
-                String url = getUrl( latitude, longitude, "restaurant" );
+                String url = getUrl( latitude, longitude, "hospital" );
                 Log.i("MainActivity", url);
                // setmarkers( url );
                 Object[] dataTransfer = new Object[2];
