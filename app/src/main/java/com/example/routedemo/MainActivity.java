@@ -149,7 +149,7 @@ private String getUrl(double latitude, double longitude, String nearbyPlace)
     placeUrl.append( "&radius=" + RADIUS );
     placeUrl.append( "&type=" + nearbyPlace );
     //placeUrl.append( "&keyword=cruise" );
-    placeUrl.append( "&key=" + getString(R.string.api_key ));
+    placeUrl.append( "&key=" + getString(R.string.api_key_class ));
     return placeUrl.toString();
 }
     @Override
@@ -164,7 +164,7 @@ private String getUrl(double latitude, double longitude, String nearbyPlace)
         {
             case R.id.btn_restaurant:
                 // get the url from place api
-                String url = getUrl( latitude, longitude, "hospital" );
+                String url = getUrl( latitude, longitude, "restaurant" );
                 Log.i("MainActivity", url);
                // setmarkers( url );
                 Object[] dataTransfer = new Object[2];

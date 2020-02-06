@@ -27,9 +27,9 @@ public class GetNearbyPlaceData extends AsyncTask<Object, String, String> {
         googleMap = (GoogleMap) objects[0];
         url = (String) objects[1];
         //placeData = (String) objects[2];
-        FetchURL fetchURL = new FetchURL();
+        //FetchURL fetchURL = new FetchURL();
         try {
-            placeData = fetchURL.readUrl( url );
+            placeData = FetchURL.readURL( url );
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -49,7 +49,7 @@ return placeData;
     private void  showNearByPlaces(List<HashMap<String, String>> nearbyList){
         for(int i = 0; i <nearbyList.size();i++)
         {
-           // Log.i("MainActivity", String.valueOf( nearbyList.size()));
+           //Log.i("MainActivity", String.valueOf( nearbyList.size()));
             HashMap<String, String> place = nearbyList.get( i );
 
             String placeName = place.get( "placeName" );
@@ -65,13 +65,13 @@ return placeData;
                     .icon( BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN) );
             googleMap.addMarker( marker );
 
-            CameraPosition cameraPosition = CameraPosition.builder()
-                    .target( location )
-                    .zoom( 15 )
-                    .bearing( 0 )
-                    .tilt( 45 )
-                    .build();
-            googleMap.animateCamera( CameraUpdateFactory.newCameraPosition( cameraPosition ) );
+//            CameraPosition cameraPosition = CameraPosition.builder()
+//                    .target( location )
+//                    .zoom( 15 )
+//                    .bearing( 0 )
+//                    .tilt( 45 )
+//                    .build();
+//            googleMap.animateCamera( CameraUpdateFactory.newCameraPosition( cameraPosition ) );
 
 
         }

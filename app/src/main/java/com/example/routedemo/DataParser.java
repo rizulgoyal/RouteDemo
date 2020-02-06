@@ -33,7 +33,7 @@ public class DataParser {
             place.put( "placeName", placeName );
             place.put( "vicinity", vicinity );
             place.put( "lat", latitude );
-            place.put( "long", longitude );
+            place.put( "lng", longitude );
             place.put( "reference", reference );
 
 

@@ -12,10 +12,38 @@ import java.net.URL;
 
 public class FetchURL {
 
-    public String readUrl(String myURL) throws IOException {
+    public static  String readURL(String mUrl) throws IOException {
+        String data = "";
+        InputStream inputStream = null;
+        HttpURLConnection httpURLConnection = null;
+        try {
+            URL url = new URL(mUrl);
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+            inputStream = httpURLConnection.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuffer stringBuffer = new StringBuffer();
+            String line = "";
+            while ((line = reader.readLine()) != null)
+                stringBuffer.append(line);
+            data = stringBuffer.toString();
+            reader.close();
+        }
+        catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+                httpURLConnection.disconnect();
+            }
+        }
+        return data;
+    }
+
+    public static String readUrl(String myURL) throws IOException {
         String data ="";
         InputStream inputStream = null;
-
         HttpURLConnection httpURLConnection = null;
 
         try {
